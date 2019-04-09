@@ -86,3 +86,29 @@ func (ctx *cancelCtx) cancel(err error) {
 
 	close(ctx.done)
 }
+
+var DeadlineExceeded = errors.New("deadline exceeded")
+
+type deadlineCtx struct {
+	*cancelCtx
+	deadline time.Time
+}
+
+func (ctx *deadlineCtx) Deadline() (deadline time.Time, ok bool) {
+	return ctx.deadline, true
+}
+
+func WithDeadline(parent Context, deadline time.Time) (Context, CancelFunc) {
+	cctx, cancel := WithCancel(parent)
+
+	ctx := deadlineCtx{
+		cancelCtx: cctx.(*cancelCtx),
+		deadline:  deadline,
+	}
+
+	time.AfterFunc(time.Until(deadline), func() {
+		ctx.cancel(DeadlineExceeded)
+	})
+
+	return &ctx, cancel
+}

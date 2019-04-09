@@ -2,6 +2,7 @@ package context_impl
 
 import (
 	"fmt"
+	"math"
 	"testing"
 	"time"
 )
@@ -61,7 +62,7 @@ func TestWithCancelPropagation(t *testing.T) {
 	}
 
 }
-/*
+
 func TestWithDeadline(t *testing.T) {
 	deadline := time.Now().Add(2 * time.Second)
 	ctx, cancel := WithDeadline(Background(), deadline)
@@ -84,7 +85,7 @@ func TestWithDeadline(t *testing.T) {
 		t.Errorf("error should still be DeadlineExceeded, got %v", err)
 	}
 }
-
+/*
 func TestWithTimeout(t *testing.T) {
 	timeout := 2 * time.Second
 	deadline := time.Now().Add(timeout)
