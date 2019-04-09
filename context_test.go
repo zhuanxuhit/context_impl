@@ -85,7 +85,7 @@ func TestWithDeadline(t *testing.T) {
 		t.Errorf("error should still be DeadlineExceeded, got %v", err)
 	}
 }
-/*
+
 func TestWithTimeout(t *testing.T) {
 	timeout := 2 * time.Second
 	deadline := time.Now().Add(timeout)
@@ -167,7 +167,7 @@ func TestDeadlineExceededIsTimeouter(t *testing.T) {
 		t.Errorf("deadline exceeded context should have Timeout method")
 	}
 }
-*/
+
 var (
 	_ Context
 	_ testing.T

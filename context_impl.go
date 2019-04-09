@@ -2,6 +2,7 @@ package context_impl
 
 import (
 	"errors"
+	"reflect"
 	"sync"
 	"time"
 )
@@ -87,7 +88,15 @@ func (ctx *cancelCtx) cancel(err error) {
 	close(ctx.done)
 }
 
-var DeadlineExceeded = errors.New("deadline exceeded")
+//var DeadlineExceeded = errors.New("deadline exceeded")
+var DeadlineExceeded error = deadlineExceededError{}
+
+type deadlineExceededError struct{}
+
+func (deadlineExceededError) Error() string   { return "context deadline exceeded" }
+func (deadlineExceededError) Timeout() bool   { return true }
+func (deadlineExceededError) Temporary() bool { return true }
+
 
 type deadlineCtx struct {
 	*cancelCtx
@@ -111,4 +120,36 @@ func WithDeadline(parent Context, deadline time.Time) (Context, CancelFunc) {
 	})
 
 	return &ctx, cancel
+}
+
+func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc) {
+	return WithDeadline(parent, time.Now().Add(timeout))
+}
+
+type valueCtx struct {
+	Context
+	key, value interface{}
+}
+
+func (ctx *valueCtx) Value(key interface{}) interface{} {
+	if key == ctx.key {
+		return ctx.value
+	}
+	return ctx.Context.Value(key)
+}
+
+func WithValue(parent Context, key, val interface{}) Context {
+	if key == nil {
+		panic("key is nil")
+	}
+	if !reflect.TypeOf(key).Comparable() {
+		panic("key is not Comparable")
+	}
+
+	ctx := valueCtx{
+		Context: parent,
+		key:     key,
+		value:   val,
+	}
+	return &ctx
 }
