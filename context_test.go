@@ -16,19 +16,19 @@ func TestBackgroundNotTODO(t *testing.T) {
 	}
 }
 
-func TestWithCancel(t *testing.T) {
-	ctx, cancel := WithCancel(Background())
-
-	if err := ctx.Err(); err != nil {
-		t.Errorf("error should be nil first, got %v", err)
-	}
-	cancel()
-
-	<-ctx.Done()
-	if err := ctx.Err(); err != Canceled {
-		t.Errorf("error should be canceled now, got %v", err)
-	}
-}
+//func TestWithCancel(t *testing.T) {
+//	ctx, cancel := WithCancel(Background())
+//
+//	if err := ctx.Err(); err != nil {
+//		t.Errorf("error should be nil first, got %v", err)
+//	}
+//	cancel()
+//
+//	<-ctx.Done()
+//	if err := ctx.Err(); err != Canceled {
+//		t.Errorf("error should be canceled now, got %v", err)
+//	}
+//}
 // go test -race 原理
 func TestWithCancelConcurrent(t *testing.T) {
 	ctx, cancel := WithCancel(Background())
