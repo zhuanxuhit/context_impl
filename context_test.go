@@ -3,6 +3,7 @@ package context_impl
 import (
 	"fmt"
 	"testing"
+	"time"
 )
 
 func TestBackgroundNotTODO(t *testing.T) {
@@ -13,7 +14,7 @@ func TestBackgroundNotTODO(t *testing.T) {
 		t.Errorf("TODO and Background are equal: %q vs %q", todo, bg)
 	}
 }
-/*
+
 func TestWithCancel(t *testing.T) {
 	ctx, cancel := WithCancel(Background())
 
@@ -27,7 +28,7 @@ func TestWithCancel(t *testing.T) {
 		t.Errorf("error should be canceled now, got %v", err)
 	}
 }
-
+// go test -race 原理
 func TestWithCancelConcurrent(t *testing.T) {
 	ctx, cancel := WithCancel(Background())
 
@@ -60,7 +61,7 @@ func TestWithCancelPropagation(t *testing.T) {
 	}
 
 }
-
+/*
 func TestWithDeadline(t *testing.T) {
 	deadline := time.Now().Add(2 * time.Second)
 	ctx, cancel := WithDeadline(Background(), deadline)
